@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model posts {
+  pid      Int       @id @default(autoincrement())
+  pname    String
+  pcontent String?
+  created  DateTime? @default(now()) @db.Timestamp(6)
+  uid      Int
+  users    users     @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  uid       Int       @id @default(autoincrement())
+  uname     String    @unique @db.VarChar(50)
+  uemail    String    @db.VarChar(100)
+  upassword String?   @db.VarChar(300)
+  joined    DateTime? @default(now()) @db.Timestamp(6)
+  follows   Int[]     @default([])
+  provider  String    @db.VarChar(20)
+  posts     posts[]
+  @@unique([provider,uemail])
+}
