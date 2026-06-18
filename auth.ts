@@ -23,8 +23,10 @@ export const { handlers, auth, signIn, signOut } =
                     }
                     const existinguser = await prisma.users.findUnique({
                         where: {
-                            uemail: email as string,
-                            provider: "credentials"
+                            provider_uemail:{
+                                uemail:email as string,
+                                provider:"credentials"
+                            }
                         }
                     })
                     if (!existinguser) {

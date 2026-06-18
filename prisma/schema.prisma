@@ -24,6 +24,9 @@ model users {
   joined    DateTime? @default(now()) @db.Timestamp(6)
   follows   Int[]     @default([])
   provider  String    @db.VarChar(20)
+  bio       String?   @db.VarChar(500)
+  image     String?   @default("/default_avatar.png")
   posts     posts[]
-  @@unique([provider,uemail])
+
+  @@unique([provider, uemail])
 }
