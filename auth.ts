@@ -17,15 +17,14 @@ export const { handlers, auth, signIn, signOut } =
                     }
                 },
                 async authorize({ password, email }) {
-                    console.log(email, password)
                     if (!(email && password)) {
                         throw new CredentialsSignin("Invalid Credentials")
                     }
                     const existinguser = await prisma.users.findUnique({
                         where: {
-                            provider_uemail:{
-                                uemail:email as string,
-                                provider:"credentials"
+                            provider_uemail: {
+                                uemail: email as string,
+                                provider: "credentials"
                             }
                         }
                     })

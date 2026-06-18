@@ -21,13 +21,12 @@ const Page = () => {
     const data = new FormData(e.currentTarget)
     let result = null
     if (session.status == "authenticated") {
-      result = await createAccount(provider, email as string, null, data.get("uname") as string,session.data.user?.image as string)
+      result = await createAccount(provider, email as string, null, data.get("uname") as string, session.data.user?.image as string)
     } else {
       result = await createAccount(provider, data.get("email") as string, data.get("password") as string, data.get("uname") as string
       )
     }
     if (result?.error) {
-      console.log(result.error)
       seterrorcode(result.error)
     }
     else {

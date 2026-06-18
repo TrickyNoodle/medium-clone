@@ -1,11 +1,32 @@
+"use client"
 import Link from 'next/link';
 import { CiSearch } from "react-icons/ci";
 import { TfiPencilAlt } from 'react-icons/tfi';
-import { auth } from '@/auth';
+import { sessionuser } from './store';
+import { useSession } from 'next-auth/react';
+import { getUserDetails } from '@/app/lib/Account';
+import { useEffect } from 'react';
 
-const NavbarHome = async () => {
-    const session = await auth()
+const NavbarHome = () => {
+    const { setuser } = sessionuser((state) => state)
+    const { data: session } = useSession()
     const userimage = session?.user?.image
+    const provider = session?.user?.image?.includes("github") ? "github" : session?.user?.image?.includes("google") ? "google" : "credentials"
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!session?.user?.email) return;
+            const data = await getUserDetails(
+                session.user.email,
+                provider
+            );
+            setuser({
+                uid: data?.uid as number,
+                uname: data?.name as string,
+            });
+        };
+
+        fetchUser();
+    }, [session, provider, setuser]);
     return (
         <div className='sticky flex justify-between top-0 p-2 px-4 left-0 right-0 bg-white   '>
             <div className='flex gap-4 items-center'>

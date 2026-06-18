@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 import { prisma } from "./app/lib/prisma";
+import { sessionuser } from "./components/store";
 
 const protected_routes = [
     "/home", "/home/new_post", "/home/profile"
@@ -16,7 +17,7 @@ export const proxy = auth(async (req) => {
                 provider = "google"
             const existinguser = await prisma.users.findUnique({
                 where: {
-                    provider_uemail: { provider: provider, uemail: req.auth.user.email as string}
+                    provider_uemail: { provider: provider, uemail: req.auth.user.email as string }
                 }
             })
             if (!existinguser)
