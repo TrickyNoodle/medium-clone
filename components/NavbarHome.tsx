@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CiSearch } from "react-icons/ci";
 import { TfiPencilAlt } from 'react-icons/tfi';
 import { sessionuser } from './store';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { getUserDetails } from '@/app/lib/Account';
 import { useEffect } from 'react';
 
@@ -46,9 +46,10 @@ const NavbarHome = () => {
                         <TfiPencilAlt className='text-xl' /> Write
                     </Link></li>
                     <li className='hover:text-black text-gray-500'><Link href={"/home/profile"} className='flex gap-2 items-center'>
-                        <img src={userimage || "./default_avatar.png"} loading='lazy' className='size-8 rounded-full' />
+                        <img src={userimage || "/default_avatar.png"} loading='lazy' className='size-8 rounded-full' />
                         {session?.user?.name}
                     </Link></li>
+                    <li className='flex hover:backdrop-brightness-75 h-full w-full'><button className='cursor-pointer size-full' onClick={() => signOut()}>SignOut</button></li>
                 </ol>
             </div>
         </div>

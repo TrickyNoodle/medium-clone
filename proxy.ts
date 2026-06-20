@@ -2,14 +2,15 @@ import { NextResponse } from "next/server";
 import { auth } from "./auth";
 import { prisma } from "./app/lib/prisma";
 import { sessionuser } from "./components/store";
+import { User } from "next-auth";
 
 const protected_routes = [
-    "/home", "/home/new_post", "/home/profile"
+    "/home"
 ]
 
 export const proxy = auth(async (req) => {
     let provider = "credentials"
-    if (protected_routes.includes(req.nextUrl.pathname)) {
+    if (protected_routes.some((route) => { return req.nextUrl.pathname.startsWith(route) })) {
         if (req.auth?.user) {
             if (req.auth.user.image?.includes("github"))
                 provider = "github"

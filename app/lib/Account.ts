@@ -2,7 +2,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
-import { Followers, User } from "../home/profile/[userid]/page";
+import { Followers, User } from "@/app/types/Account";
 
 export async function createAccount(provider: string, uemail: string, upassword: string | null, uname: string, image?: string) {
   if (uname == '')
@@ -52,7 +52,6 @@ export async function getUserDetails(
   arg2?: string
 ): Promise<User> {
   let result;
-
   if (typeof arg1 === "number") {
     result = await prisma.users.findUnique({
       where: {
@@ -69,6 +68,8 @@ export async function getUserDetails(
       },
     });
   }
+  if (!result)
+    return { "error": "User Not Found" }
   return {
     uid: result?.uid,
     name: result?.uname,
@@ -156,11 +157,43 @@ export async function getPosts(uid: number) {
     const result = await prisma.posts.findMany({
       where: {
         uid: uid
+      },
+      orderBy: {
+        pid: "desc"
       }
     })
     return result
   }
   catch (error) {
     return []
+  }
+}
+export async function updatebio(uid: number, bio: string) {
+  try {
+    const result = await prisma.users.update({
+      data: {
+        bio: bio
+      },
+      where: {
+        uid: uid
+      }
+    })
+    return { "msg": "success" }
+  }
+  catch (error) {
+    return { "msg": "error" }
+  }
+}
+export async function deletePost(pid: number) {
+  try {
+    await prisma.posts.delete({
+      where: {
+        pid: pid
+      }
+    })
+    return { "msg": "success" }
+  }
+  catch (error) {
+    return { "msg": "error" }
   }
 }

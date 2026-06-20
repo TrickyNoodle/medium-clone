@@ -33,7 +33,7 @@ Medium Clone is an attempt to recreate the core functionality of Medium, a publi
 ### Planned
 - [ ] Comments & Discussions
 - [ ] Like/Clap System
-- [ ] Following System
+- [x] Following System
 - [ ] Recommendations Engine
 - [ ] Dark Mode
 - [ ] Social Sharing
