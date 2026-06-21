@@ -28,7 +28,7 @@ Medium Clone is an attempt to recreate the core functionality of Medium, a publi
 - [x] User Profiles
 - [ ] Article Search & Filtering
 - [ ] Responsive Design
-- [ ] Rich Text Editor
+- [x] Rich Text Editor
 
 ### Planned
 - [ ] Comments & Discussions

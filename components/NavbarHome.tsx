@@ -28,7 +28,7 @@ const NavbarHome = () => {
         fetchUser();
     }, [session, provider, setuser]);
     return (
-        <div className='sticky flex justify-between top-0 p-2 px-4 left-0 right-0 bg-white   '>
+        <div className='sticky flex justify-between top-0 p-2 px-4 left-0 right-0 bg-white z-500'>
             <div className='flex gap-4 items-center'>
                 <Link href={"/home"}
                     className="text-3xl primary-font font-bold bg-linear-to-r from-blue-500 to-black bg-clip-text text-black hover:text-transparent transition-colors duration-300"

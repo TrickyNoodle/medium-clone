@@ -1,9 +1,16 @@
-import React from 'react'
+'use client'
+import { ForwardRefEditor } from '@/components/ForwardRefEditor'
+import '@mdxeditor/editor/style.css'
 
-const page = () => {
-  return (
-    <div>New Post Page</div>
-  )
+import dynamic from 'next/dynamic'
+
+const Editor = dynamic(
+  () => import('@/components/Editor'),
+  { ssr: false }
+)
+
+export default function Page() {
+  return <div className=''>
+    <ForwardRefEditor markdown='# Hello World' />
+  </div>
 }
-
-export default page
