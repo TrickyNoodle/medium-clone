@@ -14,6 +14,7 @@ model posts {
   created  DateTime? @default(now()) @db.Timestamp(6)
   uid      Int
   users    users     @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  tags     String[] @default(["general"])
 }
 
 model users {

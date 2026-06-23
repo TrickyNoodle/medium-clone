@@ -137,7 +137,6 @@ export default function InitializedMDXEditor({
 
   return (
     <MDXEditor
-      className=''
       ref={editorRef}
       readOnly={readOnly}
       plugins={plugins}
