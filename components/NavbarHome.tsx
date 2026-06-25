@@ -1,11 +1,11 @@
 "use client"
 import Link from 'next/link';
-import { CiSearch } from "react-icons/ci";
 import { TfiPencilAlt } from 'react-icons/tfi';
 import { sessionuser } from './store';
 import { signOut, useSession } from 'next-auth/react';
 import { getUserDetails } from '@/app/lib/Account';
-import { useEffect } from 'react';
+import { useEffect} from 'react';
+import Search from './Search';
 
 const NavbarHome = () => {
     const { setuser } = sessionuser((state) => state)
@@ -21,7 +21,7 @@ const NavbarHome = () => {
             );
             setuser({
                 uid: data?.uid as number,
-                uname: data?.name as string,
+                uname: data?.uname as string,
             });
         };
 
@@ -29,16 +29,13 @@ const NavbarHome = () => {
     }, [session, provider, setuser]);
     return (
         <div className='sticky flex justify-between top-0 p-2 px-4 left-0 right-0 bg-white z-500'>
-            <div className='flex gap-4 items-center'>
+            <div className='flex gap-4 items-center w-1/2'>
                 <Link href={"/home"}
                     className="text-3xl primary-font font-bold bg-linear-to-r from-blue-500 to-black bg-clip-text text-black hover:text-transparent transition-colors duration-300"
                 >
                     Medium Clone
                 </Link>
-                <label className='flex items-center h-full focus-within:text-black text-gray-400'>
-                    <CiSearch className='text-2xl flex items-center' />
-                    <input type="text" placeholder='Search' className='px-2 text-sm outline-none h-full items-center flex ' />
-                </label>
+                <Search />
             </div>
             <div className='px-4'>
                 <ol className='flex gap-8 h-full text-sm items-center'>

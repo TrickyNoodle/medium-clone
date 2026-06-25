@@ -69,7 +69,7 @@ const Page = () => {
           <img src={userdetails.image as string} className='rounded-full size-20' />
           <div className='flex flex-col w-2/3'>
             <p className='text-sm w-full'>Joined Medium on {userdetails.joined?.toDateString()}</p>
-            <p className='primary-font text-2xl font-bold'>{userdetails.name}</p>
+            <p className='primary-font text-2xl font-bold'>{userdetails.uname}</p>
             <div className='flex w-full'>
               <textarea ref={bio} maxLength={500} className='text-md min-w-1/2 max-w-full resize' disabled={!editbio} onChange={(e) => setbiotext(e.currentTarget.value)} value={biotext || undefined} />
               <p onClick={() => editable()} className={`${editbio ? "backdrop-brightness-75 rounded-md" : ""} text-xl flex items-center cursor-pointer`}>
@@ -109,7 +109,7 @@ const Page = () => {
         </div> : order == "ascending" ? posts.map((post) => {
           if (post.pname.includes(search))
             return <div key={post.pid} onClick={() => redirect("/home/post/" + post.pid)} className='border-2 flex flex-col w-full justify-center pt-2 rounded-md shadow-md hover:shadow-2xl'>
-              <p className='flex primary-font text-xl p-2'>{post.pname}</p>
+              <p className='flex primary-font text-xl p-2 flex-wrap max-w-full overflow-x-clip  '>{post.pname}</p>
               <div className='text-sm backdrop-brightness-90 rounded-md rounded-t-none justify-between w-full flex items-center' >
                 <span className='py-1 px-4'>{post.created?.toDateString()}</span>
                 <button className='flex cursor-pointer bg-red-400 hover:bg-red-500 h-full p-2 px-8 hover:font-bold' onClick={(e) => { e.stopPropagation(); deletepost(post.pid) }}>Delete</button>
@@ -118,7 +118,7 @@ const Page = () => {
         }) : posts.toReversed().map((post) => {
           if (post.pname.includes(search))
             return <div key={post.pid} onClick={() => redirect("/home/post/" + post.pid)} className='border-2 flex flex-col w-full justify-center pt-2 rounded-md shadow-md hover:shadow-2xl'>
-              <p className='flex primary-font text-xl p-2'>{post.pname}</p>
+              <p className='flex primary-font text-xl p-2 flex-wrap max-w-full overflow-x-clip'>{post.pname}</p>
               <div className='text-sm backdrop-brightness-90 rounded-md rounded-t-none justify-between w-full flex items-center' >
                 <span className='py-1 px-4'>{post.created?.toDateString()}</span>
                 <button className='flex cursor-pointer bg-red-400 hover:bg-red-500 h-full p-2 px-8 hover:font-bold ' onClick={(e) => { e.stopPropagation(); deletepost(post.pid) }}>Delete</button>

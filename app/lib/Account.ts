@@ -72,8 +72,8 @@ export async function getUserDetails(
     return { "error": "User Not Found" }
   return {
     uid: result?.uid,
-    name: result?.uname,
-    email: result?.uemail,
+    uname: result?.uname,
+    uemail: result?.uemail,
     joined: result?.joined,
     following: result?.follows,
     bio: result?.bio,
@@ -196,4 +196,15 @@ export async function deletePost(pid: number) {
   catch (error) {
     return { "msg": "error" }
   }
+}
+export async function searchusers(content: string) {
+  const result = await prisma.users.findMany({
+    where: {
+      uname: {
+        contains: content,
+        mode:"insensitive"
+      }
+    }
+  })
+  return result
 }

@@ -3,10 +3,9 @@ import { HideSignUp } from './store'
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { redirect, useSearchParams } from 'next/navigation'
+import { redirect} from 'next/navigation'
 const Signup = () => {
     const { Hide, setHide } = HideSignUp((state) => state)
-    const params = useSearchParams();
     const [error, seterror] = useState("")
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()

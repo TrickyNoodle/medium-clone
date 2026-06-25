@@ -33,3 +33,30 @@ export async function get_post(pid: number) {
     })
     return result
 }
+export async function getrecentposts() {
+    const result = await prisma.posts.findMany({
+        take: 30,
+        orderBy: {
+            pid: "desc"
+        }
+    })
+    return result
+}
+export async function searchposts(name: string) {
+    const result = await prisma.posts.findMany({
+        where: {
+            OR: [{
+                pname: {
+                    contains: name,
+                    mode: "insensitive"
+                }
+            }, {
+                pcontent: {
+                    contains: name,
+                    mode: "insensitive"
+                }
+            }]
+        }
+    })
+    return result
+}

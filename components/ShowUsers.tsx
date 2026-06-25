@@ -9,7 +9,7 @@ const ShowUsers = ({ users, showusers, setshowusers, follows }: { follows: numbe
                 <p className='text-center primary-font text-2xl'>{users.length} {showusers}</p>
                 <hr className='w-full' />
                 <div className='flex flex-col gap-2'>
-                    {users.map((user, i) => {
+                    {users.map((user) => {
                         return <Followercard key={user.uid} user={user} inital={follows.includes(user.uid as number) || false} />
                     })}
                 </div>

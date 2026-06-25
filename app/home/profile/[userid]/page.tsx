@@ -47,7 +47,7 @@ const Page = () => {
       }
     }
     run()
-  }, [suser])
+  }, [suser,userid])
   if (userdetails.error)
     throw new Error(userdetails.error)
   return (
@@ -57,7 +57,7 @@ const Page = () => {
           <img src={userdetails.image as string} className='rounded-full w-20' />
           <div className='flex flex-col justify-stretch'>
             <p className='text-sm'>Joined Medium on {userdetails.joined?.toDateString()}</p>
-            <p className='primary-font text-2xl font-bold'>{userdetails.name}</p>
+            <p className='primary-font text-2xl font-bold'>{userdetails.uname}</p>
             <p className='text-md w-full text-gray-400'>{userdetails.bio}</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ const Page = () => {
         </div> : order == "ascending" ? posts.map((post) => {
           if (post.pname.includes(search))
             return <div key={post.pid} onClick={() => redirect("/home/post/" + post.pid)} className='border-2 flex flex-col w-full justify-center pt-2 rounded-md shadow-md hover:shadow-2xl'>
-              <p className='flex primary-font text-xl p-2'>{post.pname}</p>
+              <p className='flex primary-font text-xl p-2 flex-wrap overflow-x-clip max-w-full'>{post.pname}</p>
               <div className='text-sm backdrop-brightness-90 rounded-md rounded-t-none justify-between w-full flex items-center' >
                 <span className='py-1 px-4'>{post.created?.toDateString()}</span>
               </div>
@@ -100,7 +100,7 @@ const Page = () => {
         }) : posts.toReversed().map((post) => {
           if (post.pname.includes(search))
             return <div key={post.pid} onClick={() => redirect("/home/post/" + post.pid)} className='border-2 flex flex-col w-full justify-center pt-2 rounded-md shadow-md hover:shadow-2xl'>
-              <p className='flex primary-font text-xl p-2'>{post.pname}</p>
+              <p className='flex primary-font text-xl p-2 flex-wrap overflow-x-clip max-w-full'>{post.pname}</p>
               <div className='text-sm backdrop-brightness-90 rounded-md rounded-t-none justify-between w-full flex items-center' >
                 <span className='py-1 px-4'>{post.created?.toDateString()}</span>
               </div>
