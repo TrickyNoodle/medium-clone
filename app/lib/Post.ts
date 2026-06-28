@@ -1,14 +1,15 @@
 'use server'
 import { prisma } from "./prisma";
 
-export async function new_post(title: string, content: string, tags: string[], uid: number) {
+export async function new_post(title: string, content: string, tags: string[], uid: number, uname: string) {
     let result = null
     if (tags.length == 0)
         result = await prisma.posts.create({
             data: {
                 pname: title,
                 pcontent: content,
-                uid: uid
+                uid: uid,
+                uname: uname
             }
         })
     else
@@ -33,12 +34,14 @@ export async function get_post(pid: number) {
     })
     return result
 }
-export async function getrecentposts() {
+export async function getrecentposts(after?: number) {
+    after = !after ? 0 : after
     const result = await prisma.posts.findMany({
-        take: 30,
+        take: 10,
         orderBy: {
             pid: "desc"
-        }
+        },
+        skip: after
     })
     return result
 }
@@ -56,6 +59,19 @@ export async function searchposts(name: string) {
                     mode: "insensitive"
                 }
             }]
+        }
+    })
+    return result
+}
+export async function followingposts(followerlist: number[], after?: number) {
+    after = !after ? 0 : after
+    const result = await prisma.posts.findMany({
+        take: 10,
+        skip: after,
+        where: {
+            uid: {
+                in: followerlist
+            }
         }
     })
     return result

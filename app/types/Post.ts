@@ -4,5 +4,6 @@ export type Post = {
     pname: string;
     pcontent: string | null;
     created: Date | null;
-    tags:string[]
+    tags: string[]
+    uname: string | null
 };

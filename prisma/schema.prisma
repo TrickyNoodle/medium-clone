@@ -8,26 +8,29 @@ datasource db {
 }
 
 model posts {
-  pid      Int       @id @default(autoincrement())
-  pname    String
-  pcontent String?
-  created  DateTime? @default(now()) @db.Timestamp(6)
-  uid      Int
-  users    users     @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
-  tags     String[] @default(["general"])
+  pid                      Int       @id @default(autoincrement())
+  pname                    String
+  pcontent                 String?
+  created                  DateTime? @default(now()) @db.Timestamp(6)
+  uid                      Int
+  tags                     String[]  @default(["general"])
+  uname                    String?   @db.VarChar(50)
+  users                    users     @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  users_posts_unameTousers users?    @relation("posts_unameTousers", fields: [uname], references: [uname], onDelete: Cascade, onUpdate: NoAction, map: "users_uname")
 }
 
 model users {
-  uid       Int       @id @default(autoincrement())
-  uname     String    @unique @db.VarChar(50)
-  uemail    String    @db.VarChar(100)
-  upassword String?   @db.VarChar(300)
-  joined    DateTime? @default(now()) @db.Timestamp(6)
-  follows   Int[]     @default([])
-  provider  String    @db.VarChar(20)
-  bio       String?   @db.VarChar(500)
-  image     String?   @default("/default_avatar.png")
-  posts     posts[]
+  uid                      Int       @id @default(autoincrement())
+  uname                    String    @unique @db.VarChar(50)
+  uemail                   String    @db.VarChar(100)
+  upassword                String?   @db.VarChar(300)
+  joined                   DateTime? @default(now()) @db.Timestamp(6)
+  follows                  Int[]     @default([])
+  provider                 String    @db.VarChar(20)
+  bio                      String?   @db.VarChar(500)
+  image                    String?   @default("/default_avatar.png")
+  posts                    posts[]
+  posts_posts_unameTousers posts[]   @relation("posts_unameTousers")
 
   @@unique([provider, uemail])
 }

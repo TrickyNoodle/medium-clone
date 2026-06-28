@@ -18,7 +18,7 @@ export default function Page() {
     if (!title.trim())
       alert("Title Cannot be Empty")
     else {
-      const result = await new_post(title, content, tags, user.uid as number)
+      const result = await new_post(title, content, tags, user.uid as number, user.uname as string)
       if (result.msg == "success")
         redirect("/home")
       else

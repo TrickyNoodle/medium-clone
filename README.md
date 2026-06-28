@@ -26,7 +26,7 @@ Medium Clone is an attempt to recreate the core functionality of Medium, a publi
 - [x] User Authentication (Sign up, Login, Logout)
 - [x] Create, Read, Update, Delete Articles
 - [x] User Profiles
-- [ ] Article Search & Filtering
+- [x] Article Search & Filtering
 - [ ] Responsive Design
 - [x] Rich Text Editor
 

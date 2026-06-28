@@ -56,7 +56,7 @@ export default function Page() {
                     <Link href={"/home/profile/" + user?.uid} className='hover:underline'>{user?.uname}</Link>
                     <p>{date?.toDateString()} at {date?.toLocaleTimeString()}</p>
                 </div>
-                <textarea readOnly className='w-full field-sizing-content text-8xl primary-font resize-none outline-none overflow-y-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
+                <textarea readOnly className='w-full h-fit field-sizing-content text-8xl primary-font resize-none outline-none overflow-y-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
             </div>
             <hr />
             <ForwardRefEditor key={user?.uid} markdown={content} onChange={(e) => setcontent(e)} readOnly />
