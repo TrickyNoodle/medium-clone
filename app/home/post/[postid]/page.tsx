@@ -50,13 +50,13 @@ export default function Page() {
         <div className='flex flex-col gap-2'>
             <Tags tags={tags} settags={settags} readonly />
             <hr />
-            <div className='w-full rounded-md md:p-4 flex backdrop-brightness-90 md:items-center md:flex-row flex-col'>
+            <div className='rounded-md md:p-4 flex backdrop-brightness-90 md:items-center md:flex-row flex-col'>
                 <div className='flex flex-col text-center justify-center items-center h-fit gap'>
                     <img src={user?.image as string} alt="" className='rounded-full border md:size-4/10 size-1/8' />
                     <Link href={"/home/profile/" + user?.uid} className='hover:underline'>{user?.uname}</Link>
                     <p>{date?.toDateString()} at {date?.toLocaleTimeString()}</p>
                 </div>
-                <textarea readOnly className='w-full h-fit field-sizing-content text-center md:text-left md:text-8xl text-5xl primary-font resize-none outline-none overflow-y-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
+                <textarea readOnly className='w-full h-fit field-sizing-content text-center md:text-left text-5xl primary-font resize-none outline-none max-w-lvw overflow-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
             </div>
             <hr />
             <ForwardRefEditor key={user?.uid} markdown={content} onChange={(e) => setcontent(e)} readOnly />
