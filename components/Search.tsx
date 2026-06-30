@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 
 const Search = () => {
-    const router=useRouter()
+    const router = useRouter()
     const [searchopen, setsearchopen] = useState(false)
     const [recentposts, setrecentposts] = useState<Post[]>([])
     const [searchcontent, setsearchcontent] = useState("")
@@ -23,12 +23,14 @@ const Search = () => {
         }
     }
     return (
-        <div className='flex flex-col z-500 relative w-2/3' onFocus={() => setsearchopen(true)} onBlur={handleBlur}>
+        <div className='flex flex-col z-500 relative md:w-2/3 w-full' onFocus={() => setsearchopen(true)} onBlur={handleBlur}>
             <label className='flex items-center h-full focus-within:text-black text-gray-400'>
                 <CiSearch className='text-2xl flex items-center' />
-                <input onKeyDownCapture={(k) => ["Enter", "NumpadEnter"].includes(k.code) ? router.push("/home/search?content=" + searchcontent) : null} value={searchcontent} type="text" placeholder='Search' className='w-full px-2 text-sm outline-none h-full items-center flex' onChange={(e) => setsearchcontent(e.currentTarget.value)} />
+                <form onSubmit={(e) => { e.preventDefault(); router.push("/home/search?content=" + searchcontent) }}>
+                    <input onKeyDownCapture={(k) => ["Enter", "NumpadEnter"].includes(k.code) ? router.push("/home/search?content=" + searchcontent) : null} value={searchcontent} type="text" placeholder='Search' className='w-full px-2 text-sm outline-none h-full items-center flex' onChange={(e) => setsearchcontent(e.currentTarget.value)} />
+                </form>
             </label>
-            <div className='h-fit w-full absolute border top-10 bg-white shadow-2xl' hidden={!searchopen}>
+            <div className='h-fit md:w-full md:absolute left-0 right-0 fixed top-20 border md:top-10 bg-white shadow-2xl' hidden={!searchopen}>
                 {
                     recentposts.filter((p) => {
                         return p.pname.toLowerCase().includes(searchcontent.toLowerCase())

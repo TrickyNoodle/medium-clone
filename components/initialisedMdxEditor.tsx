@@ -98,7 +98,7 @@ export default function InitializedMDXEditor({
         toolbarPosition: 'bottom',
 
         toolbarContents: () => (
-          <>
+          <div className='flex w-sm'>
             <UndoRedo />
 
             <Separator />
@@ -128,7 +128,7 @@ export default function InitializedMDXEditor({
             <InsertTable />
 
             <InsertImage />
-          </>
+          </div>
         )
       })
     )

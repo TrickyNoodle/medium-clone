@@ -5,9 +5,10 @@ import { MdEmail } from "react-icons/md"
 import { createAccount } from "../lib/Account"
 import { useState } from "react"
 import { motion } from "motion/react"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 const Page = () => {
   const [errorcode, seterrorcode] = useState("")
+  const router = useRouter()
   const session = useSession()
   const provider =
     session.status === "authenticated"
@@ -30,7 +31,7 @@ const Page = () => {
       seterrorcode(result.error)
     }
     else {
-      redirect("/home")
+      router.replace("/home")
     }
   }
   return (

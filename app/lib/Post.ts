@@ -3,7 +3,7 @@ import { prisma } from "./prisma";
 
 export async function new_post(title: string, content: string, tags: string[], uid: number, uname: string) {
     let result = null
-    if (tags.length == 0)
+    if (tags.length.valueOf() == 0)
         result = await prisma.posts.create({
             data: {
                 pname: title,
@@ -18,7 +18,8 @@ export async function new_post(title: string, content: string, tags: string[], u
                 pname: title,
                 pcontent: content,
                 tags: tags,
-                uid: uid
+                uid: uid,
+                uname: uname
             }
         })
     if (result == null)

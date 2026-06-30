@@ -16,7 +16,7 @@ export default function HomeLayout({
     <div className="h-full mx-auto flex flex-col light w-full gap-1">
       <NavbarHome />
       <hr className="border-b-2 border-blue-600" />
-      <div className="w-8/12 mx-auto">
+      <div className="md:w-8/12 mx-auto p-2">
         {children}
       </div>
     </div>

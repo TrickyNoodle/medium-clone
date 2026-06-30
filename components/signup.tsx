@@ -3,10 +3,11 @@ import { HideSignUp } from './store'
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { redirect} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 const Signup = () => {
     const { Hide, setHide } = HideSignUp((state) => state)
     const [error, seterror] = useState("")
+    const router = useRouter()
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
         const formdata = new FormData(e.currentTarget)
@@ -15,7 +16,7 @@ const Signup = () => {
         if (result.error)
             seterror("Invalid Credentials : Please Check Again")
         else
-            redirect("/home")
+            router.push("/home")
     }
     return (
         <AnimatePresence>

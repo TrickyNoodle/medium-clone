@@ -39,9 +39,9 @@ export default function Page() {
     <hr />
     <ForwardRefEditor markdown="" placeholder="Post Content Here" onChange={(e) => setcontent(e)} />
     <hr />
-    <div className='flex justify-between p-4'>
-      <button onClick={(e) => Create_post(e)} className='bg-green-500 p-3 text-xl text-shadow-2xs  font-bold rounded-full text-white cursor-pointer shadow-md hover:shadow-xl  w-1/6 justify-center flex gap-2 items-center'><MdNewspaper className='text-2xl' />Post</button>
-      <button onClick={() => { redirect("/home") }} className='bg-red-500 p-3 text-xl text-shadow-2xs font-bold  rounded-full text-white cursor-pointer shadow-md hover:shadow-xl w-1/6 flex justify-center gap-2 items-center'><IoTrashBin className='text-2xl' /> Discard</button>
+    <div className='flex justify-between md:flex-row flex-col p-4 gap-2'>
+      <button onClick={(e) => Create_post(e)} className='bg-green-500 p-3 text-xl text-shadow-2xs font-bold rounded-full text-white cursor-pointer shadow-md hover:shadow-xl  md:w-1/6 justify-center flex gap-2 items-center'><MdNewspaper className='text-2xl' />Post</button>
+      <button onClick={() => { redirect("/home") }} className='bg-red-500 p-3 text-xl text-shadow-2xs font-bold  rounded-full text-white cursor-pointer shadow-md hover:shadow-xl md:w-1/6 flex justify-center gap-2 items-center'><IoTrashBin className='text-2xl' /> Discard</button>
     </div>
   </div>
 }

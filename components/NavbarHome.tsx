@@ -4,7 +4,7 @@ import { TfiPencilAlt } from 'react-icons/tfi';
 import { sessionuser } from './store';
 import { signOut, useSession } from 'next-auth/react';
 import { getUserDetails } from '@/app/lib/Account';
-import { useEffect} from 'react';
+import { useEffect } from 'react';
 import Search from './Search';
 
 const NavbarHome = () => {
@@ -29,9 +29,9 @@ const NavbarHome = () => {
     }, [session, provider, setuser]);
     return (
         <div className='sticky flex justify-between top-0 p-2 px-4 left-0 right-0 bg-white z-500'>
-            <div className='flex gap-4 items-center w-1/2'>
+            <div className='flex gap-4 items-center w-full md:w-2/3'>
                 <Link href={"/home"}
-                    className="text-3xl primary-font font-bold bg-linear-to-r from-blue-500 to-black bg-clip-text text-black hover:text-transparent transition-colors duration-300"
+                    className="text-3xl w-fit primary-font font-bold bg-linear-to-r  from-blue-500 to-black bg-clip-text text-black hover:text-transparent transition-colors duration-300"
                 >
                     Medium Clone
                 </Link>
@@ -39,14 +39,13 @@ const NavbarHome = () => {
             </div>
             <div className='px-4'>
                 <ol className='flex gap-8 h-full text-sm items-center'>
-                    <li className='hover:text-black text-gray-500'><Link href={"/home/new_post"} className='flex gap-2 items-center h-full'>
+                    <li className='hover:text-black text-gray-500 md:block hidden'><Link href={"/home/new_post"} className='flex gap-2 items-center h-full'>
                         <TfiPencilAlt className='text-xl' /> Write
                     </Link></li>
                     <li className='hover:text-black text-gray-500'><Link href={"/home/profile"} className='flex gap-2 items-center'>
                         <img src={userimage || "/default_avatar.png"} loading='lazy' className='size-8 rounded-full' />
-                        {session?.user?.name}
+                        <p className='md:block hidden'>{session?.user?.name}</p>
                     </Link></li>
-                    <li className='flex hover:backdrop-brightness-75 h-full w-full'><button className='cursor-pointer size-full' onClick={() => signOut()}>SignOut</button></li>
                 </ol>
             </div>
         </div>

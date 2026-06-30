@@ -26,8 +26,6 @@ const Page = () => {
 
     const load = useRef(null);
     const isinview = useInView(load);
-
-    // Load logged-in user
     useEffect(() => {
         async function run() {
             if (!suser.uid) return;
@@ -40,7 +38,6 @@ const Page = () => {
 
     async function fetchposts(offset = recentposts.length) {
         if (loading || !hasMore) return;
-
         if (feedtype === 1 && !user) return;
 
         setLoading(true);
@@ -66,32 +63,28 @@ const Page = () => {
             setLoading(false);
         }
     }
-
-    // Reset feed when switching
     useEffect(() => {
         if (feedtype === 1 && !user) return;
-        async function run(){
+        async function run() {
             setrecentposts([]);
             setHasMore(true);
             await fetchposts(0);
         }
-        run()
+        run();
     }, [feedtype, user]);
-
-    // Infinite scroll
     useEffect(() => {
         if (!isinview) return;
         async function run() {
             fetchposts();
         }
-        run()
+        run();
     }, [isinview]);
 
     return (
-        <div className="flex flex-col gap-2 items-center">
-            <div className="flex border rounded-md text-xl w-fit sticky top-10 left-0 right-0 z-500 bg-white">
+        <div className="w-full max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6 items-center">
+            <div className="flex border rounded-md text-base md:text-xl w-fit sticky top-4 md:top-10 z-50 bg-white shadow-sm">
                 <label
-                    className={`p-4 rounded-md rounded-r-none cursor-pointer ${feedtype === 0 ? "backdrop-brightness-80" : ""
+                    className={`px-4 py-3 md:p-4 rounded-md rounded-r-none cursor-pointer transition-colors ${feedtype === 0 ? "bg-gray-100 font-semibold" : "hover:bg-gray-50"
                         }`}
                 >
                     <input
@@ -104,7 +97,7 @@ const Page = () => {
                 </label>
 
                 <label
-                    className={`p-4 rounded-md rounded-l-none cursor-pointer ${feedtype === 1 ? "backdrop-brightness-80" : ""
+                    className={`px-4 py-3 md:p-4 rounded-md rounded-l-none cursor-pointer transition-colors ${feedtype === 1 ? "bg-gray-100 font-semibold" : "hover:bg-gray-50"
                         }`}
                 >
                     <input
@@ -116,14 +109,17 @@ const Page = () => {
                     Following
                 </label>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full relative items-start">
 
-            <div className="flex relative gap-2 justify-between">
-                {recentposts.length != 0 ? <div className="flex border top-32 sticky left-0 h-fit rounded-md flex-col p-2 text-xl shadow-2xl w-full">
-                    <p>Filter Posts By Tags</p>
-                    <Tags tags={tags} settags={settags} />
-                </div> : null}
+                {recentposts.length !== 0 && (
+                    <div className="md:col-span-1 border md:sticky md:top-32 h-fit rounded-md flex flex-col p-4 text-lg md:text-xl shadow-md bg-white">
+                        <p className="font-semibold mb-2">Filter Posts By Tags</p>
+                        <Tags tags={tags} settags={settags} />
+                    </div>
+                )}
 
-                <div className="flex flex-col gap-4 w-full">
+                {/* Feed Section */}
+                <div className={`${recentposts.length !== 0 ? "md:col-span-3" : "md:col-span-4"} flex flex-col gap-4 w-full`}>
                     {recentposts
                         .filter((p) => {
                             if (tags.length === 0) return true;
@@ -132,45 +128,41 @@ const Page = () => {
                         .map((p) => (
                             <div
                                 key={p.pid}
-                                className="border rounded-md backdrop-brightness-90 shadow-md hover:shadow-xl w-full cursor-pointer"
-                                onClick={() =>
-                                    router.push("/home/post/" + p.pid)
-                                }
+                                className="border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow w-full cursor-pointer overflow-hidden flex flex-col"
+                                onClick={() => router.push("/home/post/" + p.pid)}
                             >
-                                <p className="text-xl font-bold p-2">
+                                <p className="text-lg md:text-xl font-bold p-3 md:p-4 pb-1">
                                     {p.pname}
                                 </p>
 
-                                <ForwardRefEditor
-                                    markdown={
-                                        p.pcontent?.slice(0, 50) || ""
-                                    }
-                                    readOnly
-                                    className="bg-white rounded-md p-2"
-                                />
+                                <div className="px-3 md:px-4">
+                                    <ForwardRefEditor
+                                        markdown={p.pcontent?.slice(0, 50) || ""}
+                                        readOnly
+                                        className="bg-gray-50 rounded-md p-2 text-sm md:text-base border border-gray-100"
+                                    />
+                                </div>
 
-                                <div className="flex justify-between p-2 text-sm items-center">
+                                {/* Responsive Card Footer */}
+                                <div className="flex flex-col sm:flex-row sm:justify-between gap-2 p-3 md:p-4 text-xs md:text-sm items-start sm:items-center mt-auto border-t border-gray-50">
                                     <Link
                                         href={"/home/profile/" + p.uid}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="hover:underline font-bold"
+                                        className="hover:underline font-bold text-gray-700"
                                     >
                                         By {p.uname}
                                     </Link>
 
-                                    <div className="flex gap-2">
+                                    {/* Scrollable tags if they overflow on tiny mobile devices */}
+                                    <div className="flex flex-wrap gap-1.5 max-w-full">
                                         {p.tags.map((tag) => (
                                             <button
                                                 key={tag}
-                                                className="p-2 rounded-full border shadow-md hover:shadow-xl cursor-pointer bg-white"
+                                                className="px-2.5 py-1 text-xs rounded-full border shadow-sm hover:shadow transition-all cursor-pointer bg-white"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-
                                                     if (!tags.includes(tag)) {
-                                                        settags([
-                                                            ...tags,
-                                                            tag,
-                                                        ]);
+                                                        settags([...tags, tag]);
                                                     }
                                                 }}
                                             >
@@ -179,7 +171,7 @@ const Page = () => {
                                         ))}
                                     </div>
 
-                                    <p>
+                                    <p className="text-gray-400 sm:ml-auto">
                                         {p.created?.toLocaleDateString()}
                                     </p>
                                 </div>
@@ -188,24 +180,26 @@ const Page = () => {
                 </div>
             </div>
 
-            {feedtype === 1 && user?.following?.length === 0 ? (
-                <p>
-                    Your Following List is Empty, Please Follow Someone First.
-                </p>
-            ) : (
-                <button
-                    ref={load}
-                    disabled={loading || !hasMore}
-                    className="underline text-xl cursor-pointer disabled:opacity-50"
-                    onClick={() => fetchposts()}
-                >
-                    {loading
-                        ? "Loading..."
-                        : hasMore
-                            ? "Load More"
-                            : "That's it, No more Posts ❤️"}
-                </button>
-            )}
+            <div className="w-full text-center py-4">
+                {feedtype === 1 && user?.following?.length === 0 ? (
+                    <p className="text-gray-500 text-sm md:text-base px-4">
+                        Your Following List is Empty, Please Follow Someone First.
+                    </p>
+                ) : (
+                    <button
+                        ref={load}
+                        disabled={loading || !hasMore}
+                        className="underline text-lg md:text-xl cursor-pointer disabled:opacity-50 disabled:no-underline text-gray-700 font-medium"
+                        onClick={() => fetchposts()}
+                    >
+                        {loading
+                            ? "Loading..."
+                            : hasMore
+                                ? "Load More"
+                                : "That's it, No more Posts ❤️"}
+                    </button>
+                )}
+            </div>
         </div>
     );
 };
