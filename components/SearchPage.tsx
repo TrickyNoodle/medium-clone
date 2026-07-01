@@ -41,7 +41,7 @@ const SearchPage = () => {
                                 (p) => tags.length === 0 || tags.every((tag) => p.tags.includes(tag))
                             )
                             .map((p) => {
-                                return (    
+                                return (
                                     <div
                                         key={p.pid}
                                         className='border rounded-md text-left hover:shadow-2xl shadow-md cursor-pointer'

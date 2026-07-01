@@ -9,7 +9,6 @@ import { Post } from '@/app/types/Post'
 import { BiEdit } from 'react-icons/bi'
 import { signOut } from 'next-auth/react'
 
-
 const Page = () => {
   const [showusers, setshowusers] = useState<string | null>(null)
   const [userdetails, setuserdetails] = useState<User>({})
@@ -32,7 +31,6 @@ const Page = () => {
     const ask = confirm("Delete Post?")
     if (ask.valueOf()) {
       const result = await deletePost(pid)
-      console.log(result)
       if (result.msg == "success")
         setposts(posts.filter((post) => {
           return post.pid != pid

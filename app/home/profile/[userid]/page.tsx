@@ -13,7 +13,7 @@ const Page = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const [followers, setfollowers] = useState<Followers[]>([])
   const { userid }: { userid: string } = useParams()
-  const [isfollowed, setisfollowed] = useState(false);
+  const [isfollowed, setisfollowed] = useState<boolean>(false);
   const [following, setfollowing] = useState<Followers[]>([])
   const suser = sessionuser((state) => state)
   const [order, setorder] = useState('ascending')
@@ -39,10 +39,12 @@ const Page = () => {
       if (!data.error) {
         const data1 = await getPosts(parseInt(userid))
         setposts(data1)
+
         const data2 = await getFollowers(parseInt(userid))
         setfollowers(data2)
-        data?.following?.includes(parseInt(userid)) ? setisfollowed(true) : setisfollowed(false)
-        const data3 = await getfollowing(data?.following as number[])
+        setisfollowed(data2.some((v) => { return v.uid == suser.uid }))
+
+        const data3 = await getfollowing(data.following ?? [])
         setfollowing(data3)
       }
     }
@@ -67,7 +69,7 @@ const Page = () => {
             <li className='text-xl' onClick={() => setshowusers("Followers")}>{followers.length} Followers</li>
             {showusers ? <ShowUsers follows={userdetails.following as number[]} users={showusers == "Following" ? following : followers} setshowusers={setshowusers} showusers={showusers} /> : null}
           </ul>
-          <button onClick={followunfollow} className={`tranisiton-all duration-300 cursor-pointer hover:shadow-md hover:text-white font-bold ${isfollowed ? "hover:bg-red-400" : "hover:bg-green-500"} text-xl border-2 px-4 py-2 rounded-md ${isfollowed ? "border-red-400" : "border-green-500"}`}>{isfollowed ? "UnFollow" : "Follow"}</button>
+          <button onClick={followunfollow} className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:text-white font-bold ${isfollowed ? "hover:bg-red-400" : "hover:bg-green-500"} text-xl border-2 px-4 py-2 rounded-md ${isfollowed ? "border-red-400" : "border-green-500"}`}>{isfollowed ? "UnFollow" : "Follow"}</button>
         </div>
       </div>
       <div className='md:grid flex flex-col md:grid-cols-3 gap-2'>

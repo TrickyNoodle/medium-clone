@@ -12,7 +12,6 @@ const Signup = () => {
         e.preventDefault()
         const formdata = new FormData(e.currentTarget)
         const result = await signIn("credentials", { email: formdata.get("email"), password: formdata.get("password"), redirect: false })
-        console.log(result)
         if (result.error)
             seterror("Invalid Credentials : Please Check Again")
         else
