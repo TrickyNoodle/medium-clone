@@ -2,7 +2,7 @@
 import { ForwardRefEditor } from '@/components/ForwardRefEditor'
 import '@mdxeditor/editor/style.css'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Tags from '@/components/Tags'
 import { get_post } from '@/app/lib/Post'
 import { redirect, useParams, useRouter } from 'next/navigation'
@@ -10,6 +10,7 @@ import { User } from '@/app/types/Account'
 import { getPosts, getUserDetails } from '@/app/lib/Account'
 import Link from 'next/link'
 import { Post } from '@/app/types/Post'
+import Loading from '../../loading'
 
 export default function Page() {
     const router = useRouter();
@@ -46,31 +47,33 @@ export default function Page() {
     if (error)
         throw new Error("Post/User not found / Doesn't Exist")
 
-    return <div className='flex flex-col gap-16'>
-        <div className='flex flex-col gap-2'>
-            <Tags tags={tags} settags={settags} readonly />
-            <hr />
-            <div className='rounded-md md:p-4 flex backdrop-brightness-90 md:items-center md:flex-row flex-col'>
-                <div className='flex flex-col text-center justify-center items-center h-fit gap'>
-                    <img src={user?.image as string} alt="" className='rounded-full border md:size-4/10 size-1/8' />
-                    <Link href={"/home/profile/" + user?.uid} className='hover:underline'>{user?.uname}</Link>
-                    <p>{date?.toDateString()} at {date?.toLocaleTimeString()}</p>
-                </div>
-                <textarea readOnly className='w-full h-fit field-sizing-content text-center md:text-left text-5xl primary-font resize-none outline-none max-w-lvw overflow-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
-            </div>
-            <hr />
-            <ForwardRefEditor key={user?.uid} markdown={content} onChange={(e) => setcontent(e)} readOnly />
-        </div>
-        {posts.length != 0 ? <div className='flex flex-col gap-2'>
-            <p className='primary-font text-center font-bold text-2xl'>More Posts From {user?.uname}</p>
-            <div className='flex gap-2 overflow-x-scroll'>
-                {posts.map((p) => {
-                    return <div key={p.pid} className='border rounded-md hover:shadow-xl cursor-pointer ' onClick={() => router.push("/home/post/" + p.pid)}>
-                        <p className='text-xl primary-font p-4'>{p.pname}</p>
-                        <p className='text-sm backdrop-brightness-90 px-2'>{p.created?.toDateString()}</p>
+    return <Suspense fallback={<Loading/>}>
+        <div className='flex flex-col gap-16'>
+            <div className='flex flex-col gap-2'>
+                <Tags tags={tags} settags={settags} readonly />
+                <hr />
+                <div className='rounded-md md:p-4 flex backdrop-brightness-90 md:items-center md:flex-row flex-col'>
+                    <div className='flex flex-col text-center justify-center items-center h-fit gap'>
+                        <img src={user?.image as string} alt="" className='rounded-full border md:size-4/10 size-1/8' />
+                        <Link href={"/home/profile/" + user?.uid} className='hover:underline'>{user?.uname}</Link>
+                        <p>{date?.toDateString()} at {date?.toLocaleTimeString()}</p>
                     </div>
-                })}
+                    <textarea readOnly className='w-full h-fit field-sizing-content text-center md:text-left text-5xl primary-font resize-none outline-none max-w-lvw overflow-hidden' onChange={(e) => settitle(e.currentTarget.value)} value={title} />
+                </div>
+                <hr />
+                <ForwardRefEditor key={user?.uid} markdown={content} onChange={(e) => setcontent(e)} readOnly />
             </div>
-        </div> : null}
-    </div>
+            {posts.length != 0 ? <div className='flex flex-col gap-2'>
+                <p className='primary-font text-center font-bold text-2xl'>More Posts From {user?.uname}</p>
+                <div className='flex gap-2 overflow-x-scroll'>
+                    {posts.map((p) => {
+                        return <div key={p.pid} className='border rounded-md hover:shadow-xl cursor-pointer ' onClick={() => router.push("/home/post/" + p.pid)}>
+                            <p className='text-xl primary-font p-4'>{p.pname}</p>
+                            <p className='text-sm backdrop-brightness-90 px-2'>{p.created?.toDateString()}</p>
+                        </div>
+                    })}
+                </div>
+            </div> : null}
+        </div>
+    </Suspense>
 }

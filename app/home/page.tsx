@@ -11,6 +11,7 @@ import { useInView } from "motion/react";
 import { sessionuser } from "@/components/store";
 import { getUserDetails } from "../lib/Account";
 import { User } from "@/app/types/Account";
+import Loading from "./loading";
 
 const Page = () => {
     const router = useRouter();
@@ -193,7 +194,7 @@ const Page = () => {
                         onClick={() => fetchposts()}
                     >
                         {loading
-                            ? "Loading..."
+                            ? <Loading />
                             : hasMore
                                 ? "Load More"
                                 : "That's it, No more Posts ❤️"}
