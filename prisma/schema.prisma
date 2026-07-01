@@ -31,6 +31,9 @@ model users {
   image                    String?   @default("/default_avatar.png")
   posts                    posts[]
   posts_posts_unameTousers posts[]   @relation("posts_unameTousers")
+  endpoint                 String?
+  p256dh                   String?
+  auth                     String?
 
   @@unique([provider, uemail])
 }

@@ -45,6 +45,18 @@ export default function Page() {
         )
 
         if (result.msg === 'success') {
+          await fetch('/api/admin/broadcast', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: uid,
+              title: `New Post! by ${uname}`,
+              body: `${title}`,
+              url: `/home/post/${result.pid}`,
+            }),
+          });
           router.push('/home')
         } else {
           alert('An error occurred')
@@ -87,8 +99,8 @@ export default function Page() {
           onClick={Create_post}
           disabled={loading}
           className={`flex items-center justify-center gap-2 rounded-full p-3 text-xl font-bold text-white shadow-md transition-all md:w-1/6 ${loading
-              ? 'cursor-not-allowed bg-gray-500'
-              : 'cursor-pointer bg-green-500 hover:shadow-xl'
+            ? 'cursor-not-allowed bg-gray-500'
+            : 'cursor-pointer bg-green-500 hover:shadow-xl'
             }`}
         >
           <MdNewspaper className="text-2xl" />

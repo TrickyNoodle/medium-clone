@@ -23,9 +23,9 @@ export async function new_post(title: string, content: string, tags: string[], u
             }
         })
     if (result == null)
-        return { "msg": "error" }
+        return { "msg": "error" ,"pid":null}
     else
-        return { "msg": "success" }
+        return { "msg": "success" ,"pid":result.pid}
 }
 export async function get_post(pid: number) {
     const result = await prisma.posts.findUnique({

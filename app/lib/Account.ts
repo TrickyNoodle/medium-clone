@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 import { Followers, User } from "@/app/types/Account";
+import { PushSubscription } from "web-push";
 
 export async function createAccount(provider: string, uemail: string, upassword: string | null, uname: string, image?: string) {
   if (uname == '')
@@ -87,11 +88,6 @@ export async function getFollowers(uid: number) {
         follows: {
           has: uid
         }
-      },
-      select: {
-        uid: true,
-        uname: true,
-        image: true
       }
     })
     return result
@@ -202,9 +198,27 @@ export async function searchusers(content: string) {
     where: {
       uname: {
         contains: content,
-        mode:"insensitive"
+        mode: "insensitive"
       }
     }
   })
   return result
+}
+export async function addPushSubscription(subscription: PushSubscription, uid: number): Promise<User | { "error": string }> {
+  try {
+    const result = await prisma.users.update({
+      where: {
+        uid: uid
+      },
+      data: {
+        endpoint: subscription.endpoint,
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth
+      }
+    })
+    return result
+  }
+  catch (error) {
+    return { "error": "Something Happened" }
+  }
 }
