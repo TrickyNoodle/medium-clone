@@ -8,6 +8,7 @@ import { Followers, User } from '@/app/types/Account'
 import { Post } from '@/app/types/Post'
 import { BiEdit } from 'react-icons/bi'
 import { signOut } from 'next-auth/react'
+import Loading from '../loading'
 
 const Page = () => {
   const [showusers, setshowusers] = useState<string | null>(null)
@@ -23,6 +24,7 @@ const Page = () => {
   const router = useRouter()
   const [order, setorder] = useState('ascending')
   const [search, setsearch] = useState("")
+  const [loading, setloading] = useState(true)
 
   async function changevalue(e: React.ChangeEvent<HTMLInputElement>) {
     setsearch(e.currentTarget.value)
@@ -48,6 +50,7 @@ const Page = () => {
   useEffect(() => {
     async function run() {
       if (userid != null) {
+        setloading(true)
         const data = await getUserDetails(userid)
         setuserdetails(data)
         setbiotext(data.bio)
@@ -57,11 +60,12 @@ const Page = () => {
         setfollowers(data2)
         const data3 = await getfollowing(data?.following as number[])
         setfollowing(data3)
+        setloading(false)
       }
     }
     run()
   }, [userid])
-  return (
+  return loading ? <Loading /> :
     <div className='flex flex-col gap-4 py-2'>
       <div className='flex md:flex-row flex-col md:p-8 p-2 rounded-md shadow-md hover:shadow-xl border gap-4 justify-between transition-all duration-300 w-full'>
         <div className='flex gap-4 w-full items-center md:flex-row flex-col md:text-left'>
@@ -127,7 +131,6 @@ const Page = () => {
         })}
       </div>
     </div >
-  )
 }
 
 export default Page

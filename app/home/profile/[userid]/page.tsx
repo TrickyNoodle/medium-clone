@@ -6,6 +6,7 @@ import { redirect, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Followers, User } from '@/app/types/Account'
 import { Post } from '@/app/types/Post'
+import Loading from '../../loading'
 
 const Page = () => {
   const [showusers, setshowusers] = useState<string | null>(null)
@@ -18,6 +19,7 @@ const Page = () => {
   const suser = sessionuser((state) => state)
   const [order, setorder] = useState('ascending')
   const [search, setsearch] = useState("")
+  const [loading, setloading] = useState(true)
   async function changevalue(e: React.ChangeEvent<HTMLInputElement>) {
     setsearch(e.currentTarget.value)
   }
@@ -34,6 +36,7 @@ const Page = () => {
     if (suser.uid == parseInt(userid))
       redirect("/home/profile")
     async function run() {
+      setloading(true)
       const data = await getUserDetails(parseInt(userid))
       setuserdetails(data)
       if (!data.error) {
@@ -47,12 +50,13 @@ const Page = () => {
         const data3 = await getfollowing(data.following ?? [])
         setfollowing(data3)
       }
+      setloading(false)
     }
     run()
   }, [suser, userid])
   if (userdetails.error)
     throw new Error(userdetails.error)
-  return (
+  return loading ? <Loading /> :
     <div className='flex flex-col gap-4 py-2'>
       <div className='flex md:flex-row flex-col md:p-8 p-2 rounded-md shadow-md hover:shadow-xl border gap-4 justify-between transition-all duration-300 w-full'>
         <div className='flex gap-4 w-full items-center md:flex-row flex-col md:text-left'>
@@ -110,7 +114,5 @@ const Page = () => {
         })}
       </div>
     </div>
-  )
 }
-
 export default Page
