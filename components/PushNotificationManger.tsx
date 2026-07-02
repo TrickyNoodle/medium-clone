@@ -35,6 +35,10 @@ export default function PushNotificationManager() {
 
     async function subscribeToPush() {
         try {
+            if (!uid) {
+                throw new Error('User is not signed in');
+            }
+
             const registration = await navigator.serviceWorker.ready;
             const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
@@ -65,22 +69,23 @@ export default function PushNotificationManager() {
 
     return (
         <AnimatePresence>
-            {!cancel ? subscription ? null :
+            {!cancel ? !subscription ?
                 <motion.div animate={{ y: [-100, 0] }} exit={{ y: [0, -100] }} transition={{ type: "keyframes", ease: "easeInOut" }} className="p-4 border-b flex flex-col">
                     <h3 className="text-lg font-bold mb-2">Hey! Can we Notify You for new Posts?</h3>
                     {subscription ? (
                         <p className="text-green-600">✅ You are successfully subscribed!</p>
-                    ) : (<div className='flex gap-2'>
-                        <button
-                            onClick={subscribeToPush}
-                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
-                        >
-                            Enable Notifications
-                        </button>
-                        <button onClick={() => setcancel(true)} className='px-4 py-2 border flex rounded-md hover:backdrop-brightness-90 cursor-pointer'><RxCross1 className='text-xl' /> Cancel</button>
-                    </div>
+                    ) : (
+                        <div className='flex gap-2'>
+                            <button
+                                onClick={subscribeToPush}
+                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
+                            >
+                                Enable Notifications
+                            </button>
+                            <button onClick={() => setcancel(true)} className='px-4 py-2 border rounded-md hover:backdrop-brightness-90 cursor-pointer'><RxCross1 className='text-xl' /> Cancel</button>
+                        </div>
                     )}
-                </motion.div> : null}
+                </motion.div> : null : null}
         </AnimatePresence>
     );
 }

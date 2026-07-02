@@ -45,7 +45,7 @@ export default function Page() {
         )
 
         if (result.msg === 'success') {
-          await fetch('/api/admin/broadcast', {
+          await fetch('/api/push/broadcast', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -222,3 +222,64 @@ export async function addPushSubscription(subscription: PushSubscription, uid: n
     return { "error": "Something Happened" }
   }
 }
+
+export async function getPushSubscription(uid: number) {
+  return await prisma.users.findUnique({
+    where: { uid },
+    select: {
+      endpoint: true,
+      p256dh: true,
+      auth: true,
+    },
+  });
+}
+
+export async function updatePushSubscriptionIfChanged(subscription: PushSubscription, uid: number) {
+  try {
+    const existing = await getPushSubscription(uid);
+    if (!existing) {
+      return { error: 'User not found' };
+    }
+
+    const hasChanged =
+      existing.endpoint !== subscription.endpoint ||
+      existing.p256dh !== subscription.keys.p256dh ||
+      existing.auth !== subscription.keys.auth;
+
+    if (!hasChanged) {
+      return { updated: false };
+    }
+
+    await prisma.users.update({
+      where: { uid },
+      data: {
+        endpoint: subscription.endpoint,
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+      },
+    });
+
+    return { updated: true };
+  } catch (error) {
+    return { error: 'Something Happened' };
+  }
+}
+
+export async function removePushSubscription(uid: number): Promise<{ msg: string } | { error: string }> {
+  try {
+    await prisma.users.update({
+      where: {
+        uid: uid
+      },
+      data: {
+        endpoint: null,
+        p256dh: null,
+        auth: null
+      }
+    })
+    return { msg: "success" }
+  }
+  catch (error) {
+    return { error: "Something Happened" }
+  }
+}

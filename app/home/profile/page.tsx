@@ -21,10 +21,26 @@ const Page = () => {
   const [editbio, seteditbio] = useState(false)
   const bio = useRef(null)
   const [biotext, setbiotext] = useState(userdetails.bio)
+  const [hasPushSubscription, setHasPushSubscription] = useState(false)
   const router = useRouter()
   const [order, setorder] = useState('ascending')
   const [search, setsearch] = useState("")
   const [loading, setloading] = useState(true)
+
+  useEffect(() => {
+    async function checkPushSubscription() {
+      try {
+        const registration = await navigator.serviceWorker.ready
+        const sub = await registration.pushManager.getSubscription()
+        setHasPushSubscription(Boolean(sub))
+      } catch (error) {
+        console.error('Error checking push subscription', error)
+        setHasPushSubscription(false)
+      }
+    }
+
+    checkPushSubscription()
+  }, [])
 
   async function changevalue(e: React.ChangeEvent<HTMLInputElement>) {
     setsearch(e.currentTarget.value)
@@ -88,7 +104,25 @@ const Page = () => {
             <li className='text-xl' onClick={() => setshowusers("Followers")}>{followers.length} Followers</li>
             {showusers ? <ShowUsers follows={userdetails.following as number[]} users={showusers == "Following" ? following : followers} setshowusers={setshowusers} showusers={showusers} /> : null}
           </ul>
-          <button onClick={() => { confirm("Are You Sure You Want to Sign Out from this Account?") ? signOut() : null }} className='cursor-pointer border-2 w-fit p-2 transition-all duration-300 rounded-md hover:bg-red-400 border-red-600'>SignOut?</button>
+          <button onClick={async () => {
+            const confirmed = confirm("Are You Sure You Want to Sign Out from this Account?")
+            if (!confirmed) return
+
+            try {
+              const registration = await navigator.serviceWorker.ready
+              const sub = await registration.pushManager.getSubscription()
+              if (sub) {
+                await sub.unsubscribe()
+                await fetch('/api/push/unsubscribe?uid=' + userid, {
+                  method: 'POST',
+                })
+              }
+            } catch (error) {
+              console.error('Error removing push subscription on sign out:', error)
+            } finally {
+              signOut()
+            }
+          }} className='cursor-pointer border-2 w-fit p-2 transition-all duration-300 rounded-md hover:bg-red-400 border-red-600'>SignOut?</button>
         </div>
       </div>
       <div className='md:grid flex flex-col md:grid-cols-3 gap-2'>
@@ -130,6 +164,30 @@ const Page = () => {
             </div>
         })}
       </div>
+      {hasPushSubscription ? (
+        <div className='col-span-3 text-center'>
+          <button onClick={async () => {
+            const confirmed = confirm('Unsubscribe from push notifications?')
+            if (!confirmed) return
+
+            try {
+              const registration = await navigator.serviceWorker.ready
+              const sub = await registration.pushManager.getSubscription()
+              if (sub) {
+                await sub.unsubscribe()
+              }
+              await fetch('/api/push/unsubscribe?uid=' + userid, {
+                method: 'POST',
+              })
+              alert('You have been unsubscribed from push notifications.')
+              setHasPushSubscription(false)
+            } catch (error) {
+              console.error('Error unsubscribing from push notifications:', error)
+              alert('Unable to unsubscribe from notifications. Try again later.')
+            }
+          }} className='text-sm text-gray-400 underline hover:text-black cursor-pointer'>Unsubscribe from push notifications</button>
+        </div>
+      ) : null}
     </div >
 }
 
